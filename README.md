@@ -1,59 +1,62 @@
-
-
-
 # ⚽ Football Player Injury Duration Prediction
 
-This repository contains a Machine Learning project designed to predict the number of days a professional football player will be sidelined due to injury.
+An end-to-end **machine learning regression project** that estimates how long a professional football player may be sidelined after an injury using information available at the time of injury.
 
-## 📌 Project Overview
+## 🎯 Project Goal
 
-The objective is to provide medical and coaching staffs with a reliable estimate of recovery times based on data available at the **moment of injury**. This allows for better squad planning and injury management.
+The project explores whether injury duration can be estimated from pre-injury and injury-time information such as player age, position, injury type, and competitive context.
 
-## 🧠 The "Data Leakage" Breakthrough
+A major focus of the work is **preventing data leakage** so that model evaluation reflects a realistic prediction scenario.
 
-The most critical phase of this project was identifying **Data Leakage**.
+## 🧠 Data Leakage: The Key ML Lesson
 
-* **Initial Results:** The model achieved an unrealistic 90% accuracy using the `Games missed` feature.
-* **The Problem:** `Games missed` is a result of the injury duration, not a predictor available at the start. Using it makes the model useless for real-world predictions.
-* **The Solution:** I refactored the pipeline to remove all post-injury features, resulting in a **truthful and robust** model that relies on pre-injury metrics like age, position, and injury type.
+An early model produced unrealistically strong results because it included `Games missed`.
+
+That feature is only known after an injury has already affected the player, so using it to predict recovery duration leaks information from the future into the model.
+
+The pipeline was therefore rebuilt without post-injury information. This reduced the headline score, but produced a more honest and useful evaluation.
 
 ## 🛠️ Tech Stack
 
-* **Language:** Python
-* **Data Handling:** Pandas, NumPy
-* **Machine Learning:** Scikit-learn, XGBoost
-* **Visualization:** Matplotlib, Seaborn
+- Python
+- Pandas & NumPy
+- Scikit-learn
+- XGBoost
+- Matplotlib & Seaborn
+- Jupyter Notebook
 
-## 📊 Model Performance
+## 🤖 Models Compared
 
-After addressing the data leakage, the models were evaluated using **Mean Absolute Error (MAE)** and **R-Squared ()**:
+| Model | MAE ↓ | R² ↑ |
+| --- | ---: | ---: |
+| Linear Regression | 25.40 days | 0.220 |
+| Random Forest Regressor | 24.10 days | 0.280 |
+| **XGBoost Regressor** | **23.18 days** | **0.306** |
 
-| Model | MAE (Lower is better) | R2 Score (Higher is better) |
-| --- | --- | --- |
-| Linear Regression | 25.40 Days | 0.220 |
-| Random Forest Regressor | 24.10 Days | 0.280 |
-| **XGBoost Regressor (Best)** | **23.18 Days** | **0.306** |
+Among the evaluated models, **XGBoost achieved the strongest result**, with the lowest MAE and highest R².
 
-## 🔍 Key Insights (Feature Importance)
+## 🔍 Model Insights
 
-By analyzing the XGBoost model, we identified the primary drivers of injury duration:
+Feature-importance analysis highlighted several useful signals:
 
-1. **Injury Type:** The most significant predictor (e.g., ligament tears vs. muscle strains).
-2. **Player Age:** There is a clear correlation between increased age and longer recovery times.
-3. **League/Intensity:** The competitive environment also influences return-to-play protocols.
+- **Injury Type** — the strongest predictor in the model.
+- **Player Age** — associated with differences in expected recovery time.
+- **League / Competitive Context** — contributed additional predictive information.
 
----
+These relationships are model-derived patterns from the project dataset and should not be interpreted as medical conclusions.
 
-## 🚀 Getting Started
+## 🚀 Run the Project
 
 1. Clone the repository.
-2. Ensure you have the dataset `full_dataset_thesis - 1.csv` in the root folder.
-3. Install dependencies:
-```bash
-pip install pandas scikit-learn xgboost matplotlib
+2. Keep `full_dataset_thesis - 1.csv` in the repository root.
+3. Install the main dependencies:
 
+```bash
+pip install pandas numpy scikit-learn xgboost matplotlib seaborn jupyter
 ```
 
+4. Open and run `task.ipynb`.
 
-4. Run the Jupyter Notebook `task.ipynb` to reproduce the analysis.
+## 📌 Takeaway
 
+This project demonstrates an important ML engineering principle: **a lower but trustworthy score is more valuable than an impressive score produced by leaked information**.
